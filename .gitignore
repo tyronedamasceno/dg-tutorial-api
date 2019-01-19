@@ -1,5 +1,8 @@
 *.pyc
 *~
+s
+__pycache__/
+*.py[cod]
 __pycache__
 myvenv
 db.sqlite3
