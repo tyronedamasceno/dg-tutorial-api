@@ -26,7 +26,7 @@ API é um acrônimo do inglês *application programming interface*, ou interface
 
 Em linhas gerais, uma API é um ponto de acesso de uma certa aplicação X, para que outras aplicações Y, W e Z consigam acessar funcionalidades desta, sem necessariamente conhecer detalhes da implementação da aplicação ou acessar diretamente seus servidores, etc.
 
-Resumidamente, APIs permitem de forma rápida, prática e segura (ou pelo menos deveriam) comunicação entre aplicações.
+Resumidamente, APIs permitem de forma rápida, prática e segura (ou pelo menos deveriam permitir) a comunicação entre aplicações.
 
 Certo, então o que é uma API Rest?
 
@@ -34,9 +34,9 @@ Bem, tudo começa com uma sigla que provavelmente você já viu: **HTTP**. Este 
 
 O HTTP trata de resolver requisições entre aplicações, para isso existem alguns **verbos HTTP**, entre eles estão *GET*, *POST*, *DELETE*, mas existem diversos outros, e eles existem pra facilitar o entendimento de nós humanos sobre o que está ocorrendo na web. É simples perceber que uma requisição de *GET* tem como objetivo "pegar" informações, enquanto *DELETE* visa apagar algo (sempre tenham cuidado com o delete).
 
-Esses princípios são o que definem o REST, que significa *Representational State Transfer*, ou em português, Transferência de Estado Representacional. Em resumo, é uma abstração da arquitetura web, e esses princípios, padrões e regras (que iremos aprender), quando são seguidas permitem a criação de um sistema ou projeto, no nosso caso uma API com interfaces bem definidas, o que facilita sua comunicação com outras aplicações.
+Esses princípios são o que definem o REST, que significa *Representational State Transfer*, ou em português, Transferência de Estado Representacional (isso nâo é tâo complicado quanto parece). Em resumo, é uma abstração da arquitetura web, e esses princípios, padrões e regras (que iremos aprender), quando seguidos permitem a criação de um sistema ou projeto, no nosso caso uma API com interfaces bem definidas, o que facilita sua comunicação com outras aplicações.
 
-## O que é Django Rest Framework
+## O que é Django Rest Framework (DRF)
 
 ** *O framework Django REST é um kit de ferramentas poderoso e flexível para criar APIs da Web.* **  (Tradução do google da definição do próprio site do DRF).
 
@@ -44,7 +44,7 @@ O django rest framework é uma biblioteca python que se acopla em projetos djang
 
 Além disso, o django rest framework é tão simples de instalar em usar como qualquer pacote python. 
 
-Considerando que você já tem o pip instalado (afinal, você deve ter feito o tutorial do Django girls né?!), já ativou sua virtualenv, basta UM ÚNICO COMANDO.
+Considerando que você já tem o pip instalado (afinal, você deve ter feito o tutorial do Django girls né?!), e já ativou sua virtualenv, basta UM ÚNICO COMANDO.
 
 Se você nao lembra, para ativar virtualenv, basta este comando:
 
@@ -130,14 +130,14 @@ class PostModelViewSet(viewsets.ModelViewSet):
     serializer_class = PostModelSerializer
 ```
 
-O ModelViewSet exige que nós digamos pra ele qual serializador usar para criar a view, neste caso usaremos o serializador que criamos, PostSerializer.
+O ModelViewSet exige que nós digamos pra ele qual serializador usar para criar a view, neste caso usaremos o serializador que criamos, PostModelSerializer.
 
 
 ## URL e Routers
 
-Até agora já definimos nossos modelos, serializadores, views, porém como acessá-los? Através de urls, também conhecidos como *endpoints*.
+Até agora já definimos nossos modelos(models.py), serializadores(serializers.py), views(views.py), porém como acessá-los? Através de urls(urls.py), também conhecidos como *endpoints*.
 
-Como vocês viram no tutorial de django, as url podem ser definidas manualmente e acopladas em suas views, porém a arquitetura REST segue um padrão, então seus endpoints devem atender a algumas regras.
+Como vocês viram no tutorial de django, as urls podem ser definidas manualmente e acopladas em suas views, porém a arquitetura REST segue um padrão, então seus endpoints devem atender a algumas regras.
 
 Para não termos problemas com isso, o DRF nos dá de presente os  **ROUTERS**, que juntos a um viewset fazem todo o roteamento das requisições.
 
