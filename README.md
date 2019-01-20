@@ -15,7 +15,7 @@ O que será abordado por aqui?
 - Views baseadas em classe
 - Autenticação e Permissões
     - Baseada em Token
-- Viewsets e Routers
+- Routers
 - Consumindo a API
     - Curl (Usar Postman)
 
@@ -113,3 +113,36 @@ class PostViewSet(viewsets.ModelViewSet):
 ```
 
 O ModelViewSet exige que nós digamos pra ele qual serializador usar para criar a view, neste caso usaremos o serializador que criamos, PostSerializer.
+
+
+## URL e Routers
+
+Até agora já definimos nossos modelos, serializadores, views, porém como acessá-los? Através de urls, também conhecidos como *endpoints*.
+
+Como vocês viram no tutorial de django, as url podem ser definidas manualmente e acopladas em suas views, porém a arquitetura REST segue um padrão, então seus endpoints devem atender a algumas regras.
+
+Para não termos problemas com isso, o DRF nos dá de presente os  **ROUTERS**, que juntos a um viewset fazem todo o roteamento das requisições.
+
+Veremos no exemplo abaixo como funcionam no arquivo `urls.py` do app blog:
+
+```
+from django.urls import path, include
+from rest_framework import routers
+from . import views
+
+router = routers.DefaultRouter()
+router.register('posts', views.PostViewSet)
+
+urlpatterns = [
+    path('api/', include(router.urls))
+]
+```
+
+Neste momento, salvamos os arquivos, e rodamos o nosso servidor local.
+
+`$ python manage.py runserver`
+
+E acessaremos o endpoint da API:
+
+`localhost:8000/api`
+
