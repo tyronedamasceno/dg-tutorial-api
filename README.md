@@ -44,13 +44,18 @@ O django rest framework é uma biblioteca python que se acopla em projetos djang
 
 Além disso, o django rest framework é tão simples de instalar em usar como qualquer pacote python. 
 
-Considerando que você já tem o pip instalado (afinal, você deve ter feito o tutorial do Django girls né?!), já ativou sua virtualenv, basta UM ÚNICO COMANDO para isso:
+Considerando que você já tem o pip instalado (afinal, você deve ter feito o tutorial do Django girls né?!), já ativou sua virtualenv, basta UM ÚNICO COMANDO.
 
+Se você nao lembra, para ativar virtualenv, basta este comando:
+
+`$ source venv/bin/activate`
+
+Para instalar o django rest framework use este comando:
 `$ pip install djangorestframework`
 
 O legal é que caso você ainda não tenha o django instalado, ao instalar o djangorestframework ele automaticamente também instala o django!
 
-Como estamos dando continuidade ao tutorial do django girls, não vamos iniciar um novo projeto, apenas adicionaremos o djangorestframework nas configurações do projeto.
+Como estamos dando continuidade ao tutorial do django girls, não vamos iniciar um novo projeto, apenas adicionaremos o djangorestframework nas configurações do projeto no arquivo settings.py localizado na pasta mysite.
 
 ```
 INSTALLED_APPS = [
