@@ -6,7 +6,15 @@ Os modelos aqui utilizados são baseados no tutorial de Django do [Django Girls]
 
 O que será abordado por aqui?
 
-- Conceitos de REST
+- O que é API e REST
+    - Verbos HTTP
+- O que é Django Rest Framework
+- Modelo de dados
 - Serializers
-- ViewSets
-- AuthToken
+- Views baseadas em função
+- Views baseadas em classe
+- Autenticação e Permissões
+    - Baseada em Token
+- Viewsets e Routers
+- Consumindo a API
+    - Curl (Usar Postman)
