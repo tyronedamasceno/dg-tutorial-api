@@ -18,3 +18,45 @@ O que será abordado por aqui?
 - Viewsets e Routers
 - Consumindo a API
     - Curl (Usar Postman)
+
+
+## O que é API? E API Rest?
+
+API é um acrônimo do inglês *application programming interface*, ou interface de programação de aplicações em português.
+
+Em linhas gerais, uma API é um ponto de acesso de uma certa aplicação X, para que outras aplicações Y, W e Z consigam acessar funcionalidades desta, sem necessariamente conhecer detalhes da implementação da aplicação ou acessar diretamente seus servidores, etc.
+
+Resumidamente, APIs permitem de forma rápida, prática e segura (ou pelo menos deveriam) comunicação entre aplicações.
+
+Certo, então o que é uma API Rest?
+
+Bem, tudo começa com uma sigla que provavelmente você já viu: **HTTP**. Este é o principal protocolo de comunicação entre sistemas web usado no mundo, que já existe a mais de 20 anos.
+
+O HTTP trata de resolver requisições entre aplicações, para isso existem alguns **verbos HTTP**, entre eles estão *GET*, *POST*, *DELETE*, mas existem diversos outros, e eles existem pra facilitar o entendimento de nós humanos sobre o que está ocorrendo na web. É simples perceber que uma requisição de *GET* tem como objetivo "pegar" informações, enquanto *DELETE* visa apagar algo (sempre tenham cuidado com o delete).
+
+Esses princípios são o que definem o REST, que significa *Representational State Transfer*, ou em português, Transferência de Estado Representacional. Em resumo, é uma abstração da arquitetura web, e esses princípios, padrões e regras (que iremos aprender), quando são seguidas permitem a criação de um sistema ou projeto, no nosso caso uma API com interfaces bem definidas, o que facilita sua comunicação com outras aplicações.
+
+## O que é Django Rest Framework
+
+** *O framework Django REST é um kit de ferramentas poderoso e flexível para criar APIs da Web.* **  (Tradução do google da definição do próprio site do DRF).
+
+O django rest framework é uma biblioteca python que se acopla em projetos django, e entregam uma super base para construção de APIs REST, com toda a robustez do Django, altamente extensível e confiável.
+
+Além disso, o django rest framework é tão simples de instalar em usar como qualquer pacote python. 
+
+Considerando que você já tem o pip instalado (afinal, você deve ter feito o tutorial do Django girls né?!), já ativou sua virtualenv, basta UM ÚNICO COMANDO para isso:
+
+`$ pip install djangorestframework`
+
+O legal é que caso você ainda não tenha o django instalado, ao instalar o djangorestframework ele automaticamente também instala o django!
+
+Como estamos dando continuidade ao tutorial do django girls, não vamos iniciar um novo projeto, apenas adicionaremos o djangorestframework nas configurações do projeto.
+
+```
+INSTALLED_APPS = [
+   ...,
+   'rest_framework',
+]
+```
+
+Pronto! Já temos o Django rest framework em nosso projeto!
