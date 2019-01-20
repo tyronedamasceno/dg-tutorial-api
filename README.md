@@ -60,3 +60,29 @@ INSTALLED_APPS = [
 ```
 
 Pronto! Já temos o Django rest framework em nosso projeto!
+
+
+## Modelos de dados
+
+TODO
+
+## Serializers
+
+Os Serializadores do DRF permitem que dados "complexos", como objetos e querysets sejam convertidos em tipos de dados Python, para assim serem renderizados em formato JSON (ou outros formatos como xml, yml, etc.) e assim permite que a comunicação entre as aplicações ocorra de forma correta, que é o objetivo de uma API.
+
+Para quem já conhece, os serializadores do DRF parecem muito com os Form e ModelForm do Django.
+
+No caso da nossa aplicação, usaremos o `ModelSerializer`, que é um serializador completo pré-pronto, com operações padrão, para instanciações e consultas de nossos modelos.
+
+No nosso caso, faremos um serializador para o modelo Post, o exemplo veremos abaixo:
+
+```
+from rest_framework import serializers
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('author', 'title', 'text')
+```
+
+Como nós usamos um ModelSerializer, precisamos definir uma classe Meta, onde diremos ao DRF sobre qual modelo aquele serializador irá atuar, bem como quais atributos, *fields*, ele irá serializar.
