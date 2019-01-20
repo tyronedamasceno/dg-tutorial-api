@@ -86,3 +86,30 @@ class PostSerializer(serializers.ModelSerializer):
 ```
 
 Como nós usamos um ModelSerializer, precisamos definir uma classe Meta, onde diremos ao DRF sobre qual modelo aquele serializador irá atuar, bem como quais atributos, *fields*, ele irá serializar.
+
+
+## Views baseadas em função
+
+TODO
+
+## Views baseadas em classe
+
+Uma class based views é um padrão poderoso, que permite reutilizar funcionalidades comuns em views, além de nos ajudar a manter um código limpo.
+
+Além disso, o DRF nos permite combinar um conjunto de views relacionadas em uma única view, isso chamamos de ViewSet.
+
+Uma classe ViewSet é simplesmente uma View baseada em classe que não fornece nenhum método por padrão.
+
+Neste tutorial iremos usar uma especialização da ViewSet, o ModelViewSet, que provê todas as funcionalidades básicas necessárias para nossa API.
+
+```
+from .serializers import PostSerializer
+
+from rest_framework import viewsets
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all().order_by('-title')
+    serializer_class = PostSerializer
+```
+
+O ModelViewSet exige que nós digamos pra ele qual serializador usar para criar a view, neste caso usaremos o serializador que criamos, PostSerializer.
