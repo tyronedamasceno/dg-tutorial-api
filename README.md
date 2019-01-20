@@ -76,21 +76,25 @@ No caso da nossa aplicação, usaremos o `ModelSerializer`, que é um serializad
 
 No nosso caso, faremos um serializador para o modelo Post, o exemplo veremos abaixo:
 
+Crie um arquivo serializers.py dentro da pasta blog:
+
 ```
 from rest_framework import serializers
 
-class PostSerializer(serializers.ModelSerializer):
+from .models import Post
+
+class PostModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('author', 'title', 'text')
 ```
 
-Como nós usamos um ModelSerializer, precisamos definir uma classe Meta, onde diremos ao DRF sobre qual modelo aquele serializador irá atuar, bem como quais atributos, *fields*, ele irá serializar.
+Como nós usamos um ModelSerializer, precisamos definir uma classe Meta (responsável por configurar o serializer), onde diremos ao DRF sobre qual modelo aquele serializador irá atuar, bem como quais atributos, *fields*, ele irá serializar.
 
 
 ## Views baseadas em função
 
-TODO
+Neste tipo é necessário implementar tudo do zero. Neste tutorial usaremos Views baseadas em classe.
 
 ## Views baseadas em classe
 
@@ -102,14 +106,23 @@ Uma classe ViewSet é simplesmente uma View baseada em classe que não fornece n
 
 Neste tutorial iremos usar uma especialização da ViewSet, o ModelViewSet, que provê todas as funcionalidades básicas necessárias para nossa API.
 
+Edite sua classe views.py localizada na pasta blog, para ficar semelhante ao código abaixo:
+
 ```
-from .serializers import PostSerializer
-
+from django.shortcuts import render
+from django.utils import timezone
+from .models import Post
 from rest_framework import viewsets
+from .serializers import PostModelSerializer
 
-class PostViewSet(viewsets.ModelViewSet):
+
+def post_list(request):
+    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date') 
+    return render(request, 'blog/post_list.html', {'posts': posts})
+
+class PostModelViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-title')
-    serializer_class = PostSerializer
+    serializer_class = PostModelSerializer
 ```
 
 O ModelViewSet exige que nós digamos pra ele qual serializador usar para criar a view, neste caso usaremos o serializador que criamos, PostSerializer.
@@ -131,10 +144,11 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register('posts', views.PostViewSet)
+router.register('posts', views.PostModelViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls))
+    path('', views.post_list, name='post_list'),
+    path('api/v1/', include(router.urls))
 ]
 ```
 
@@ -144,5 +158,5 @@ Neste momento, salvamos os arquivos, e rodamos o nosso servidor local.
 
 E acessaremos o endpoint da API:
 
-`localhost:8000/api`
+`localhost:8000/api/v1`
 
