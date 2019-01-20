@@ -26,7 +26,7 @@ API é um acrônimo do inglês *application programming interface*, ou interface
 
 Em linhas gerais, uma API é um ponto de acesso de uma certa aplicação X, para que outras aplicações Y, W e Z consigam acessar funcionalidades desta, sem necessariamente conhecer detalhes da implementação da aplicação ou acessar diretamente seus servidores, etc.
 
-Resumidamente, APIs permitem de forma rápida, prática e segura (ou pelo menos deveriam) comunicação entre aplicações.
+Resumidamente, APIs permitem de forma rápida, prática e segura (ou pelo menos deveriam permitir) a comunicação entre aplicações.
 
 Certo, então o que é uma API Rest?
 
@@ -34,9 +34,9 @@ Bem, tudo começa com uma sigla que provavelmente você já viu: **HTTP**. Este 
 
 O HTTP trata de resolver requisições entre aplicações, para isso existem alguns **verbos HTTP**, entre eles estão *GET*, *POST*, *DELETE*, mas existem diversos outros, e eles existem pra facilitar o entendimento de nós humanos sobre o que está ocorrendo na web. É simples perceber que uma requisição de *GET* tem como objetivo "pegar" informações, enquanto *DELETE* visa apagar algo (sempre tenham cuidado com o delete).
 
-Esses princípios são o que definem o REST, que significa *Representational State Transfer*, ou em português, Transferência de Estado Representacional. Em resumo, é uma abstração da arquitetura web, e esses princípios, padrões e regras (que iremos aprender), quando são seguidas permitem a criação de um sistema ou projeto, no nosso caso uma API com interfaces bem definidas, o que facilita sua comunicação com outras aplicações.
+Esses princípios são o que definem o REST, que significa *Representational State Transfer*, ou em português, Transferência de Estado Representacional (isso nâo é tâo complicado quanto parece). Em resumo, é uma abstração da arquitetura web, e esses princípios, padrões e regras (que iremos aprender), quando seguidos permitem a criação de um sistema ou projeto, no nosso caso uma API com interfaces bem definidas, o que facilita sua comunicação com outras aplicações.
 
-## O que é Django Rest Framework
+## O que é Django Rest Framework (DRF)
 
 ** *O framework Django REST é um kit de ferramentas poderoso e flexível para criar APIs da Web.* **  (Tradução do google da definição do próprio site do DRF).
 
@@ -44,13 +44,18 @@ O django rest framework é uma biblioteca python que se acopla em projetos djang
 
 Além disso, o django rest framework é tão simples de instalar em usar como qualquer pacote python. 
 
-Considerando que você já tem o pip instalado (afinal, você deve ter feito o tutorial do Django girls né?!), já ativou sua virtualenv, basta UM ÚNICO COMANDO para isso:
+Considerando que você já tem o pip instalado (afinal, você deve ter feito o tutorial do Django girls né?!), e já ativou sua virtualenv, basta UM ÚNICO COMANDO.
 
+Se você nao lembra, para ativar virtualenv, basta este comando:
+
+`$ source venv/bin/activate`
+
+Para instalar o django rest framework use este comando:
 `$ pip install djangorestframework`
 
 O legal é que caso você ainda não tenha o django instalado, ao instalar o djangorestframework ele automaticamente também instala o django!
 
-Como estamos dando continuidade ao tutorial do django girls, não vamos iniciar um novo projeto, apenas adicionaremos o djangorestframework nas configurações do projeto.
+Como estamos dando continuidade ao tutorial do django girls, não vamos iniciar um novo projeto, apenas adicionaremos o djangorestframework nas configurações do projeto no arquivo settings.py localizado na pasta mysite.
 
 ```
 INSTALLED_APPS = [
@@ -76,21 +81,25 @@ No caso da nossa aplicação, usaremos o `ModelSerializer`, que é um serializad
 
 No nosso caso, faremos um serializador para o modelo Post, o exemplo veremos abaixo:
 
+Crie um arquivo serializers.py dentro da pasta blog:
+
 ```
 from rest_framework import serializers
 
-class PostSerializer(serializers.ModelSerializer):
+from .models import Post
+
+class PostModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('author', 'title', 'text')
 ```
 
-Como nós usamos um ModelSerializer, precisamos definir uma classe Meta, onde diremos ao DRF sobre qual modelo aquele serializador irá atuar, bem como quais atributos, *fields*, ele irá serializar.
+Como nós usamos um ModelSerializer, precisamos definir uma classe Meta (responsável por configurar o serializer), onde diremos ao DRF sobre qual modelo aquele serializador irá atuar, bem como quais atributos, *fields*, ele irá serializar.
 
 
 ## Views baseadas em função
 
-TODO
+Neste tipo é necessário implementar tudo do zero. Neste tutorial usaremos Views baseadas em classe.
 
 ## Views baseadas em classe
 
@@ -102,24 +111,33 @@ Uma classe ViewSet é simplesmente uma View baseada em classe que não fornece n
 
 Neste tutorial iremos usar uma especialização da ViewSet, o ModelViewSet, que provê todas as funcionalidades básicas necessárias para nossa API.
 
-```
-from .serializers import PostSerializer
+Edite sua classe views.py localizada na pasta blog, para ficar semelhante ao código abaixo:
 
+```
+from django.shortcuts import render
+from django.utils import timezone
+from .models import Post
 from rest_framework import viewsets
+from .serializers import PostModelSerializer
 
-class PostViewSet(viewsets.ModelViewSet):
+
+def post_list(request):
+    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date') 
+    return render(request, 'blog/post_list.html', {'posts': posts})
+
+class PostModelViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-title')
-    serializer_class = PostSerializer
+    serializer_class = PostModelSerializer
 ```
 
-O ModelViewSet exige que nós digamos pra ele qual serializador usar para criar a view, neste caso usaremos o serializador que criamos, PostSerializer.
+O ModelViewSet exige que nós digamos pra ele qual serializador usar para criar a view, neste caso usaremos o serializador que criamos, PostModelSerializer.
 
 
 ## URL e Routers
 
-Até agora já definimos nossos modelos, serializadores, views, porém como acessá-los? Através de urls, também conhecidos como *endpoints*.
+Até agora já definimos nossos modelos(models.py), serializadores(serializers.py), views(views.py), porém como acessá-los? Através de urls(urls.py), também conhecidos como *endpoints*.
 
-Como vocês viram no tutorial de django, as url podem ser definidas manualmente e acopladas em suas views, porém a arquitetura REST segue um padrão, então seus endpoints devem atender a algumas regras.
+Como vocês viram no tutorial de django, as urls podem ser definidas manualmente e acopladas em suas views, porém a arquitetura REST segue um padrão, então seus endpoints devem atender a algumas regras.
 
 Para não termos problemas com isso, o DRF nos dá de presente os  **ROUTERS**, que juntos a um viewset fazem todo o roteamento das requisições.
 
@@ -131,10 +149,11 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register('posts', views.PostViewSet)
+router.register('posts', views.PostModelViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls))
+    path('', views.post_list, name='post_list'),
+    path('api/v1/', include(router.urls))
 ]
 ```
 
@@ -144,5 +163,5 @@ Neste momento, salvamos os arquivos, e rodamos o nosso servidor local.
 
 E acessaremos o endpoint da API:
 
-`localhost:8000/api`
+`localhost:8000/api/v1`
 
