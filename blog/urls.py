@@ -6,6 +6,5 @@ router = routers.DefaultRouter()
 router.register('posts', views.PostViewSet)
 
 urlpatterns = [
-    path('', views.post_list, name='post_list'),
     path('api/', include(router.urls))
 ]
