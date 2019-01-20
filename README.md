@@ -165,3 +165,64 @@ E acessaremos o endpoint da API:
 
 `localhost:8000/api/v1`
 
+## Autenticação e permissão
+
+Um dos objetivos de construir uma API é dar segurança ao seu sistema, tendo controle de quem poderá usá-lo e como irá fazer isto. Para que isso ocorra, uma alternativa que o DRF te entrega é o uso de *Tokens* de autenticação, que os usuários recebem ao fazer uma requisição **POST** de login, enviando no corpo *username* e *password*.
+
+O Token é uma chave criptografada que possui em si o usuário a quem pertence, e pode possuir um prazo de expiração. Após ter posse do token, este deve ser enviado no cabeçalho das requisições na seguinte forma:
+
+`"-H 'authorization: Token <seu-token>'"` para comandos CURL.
+
+O servidor irá receber o token e verificar se é válido, em caso positivo, libera a requisição.
+
+No DRF, precisamos criar um serializador para nossas requisições, bem como uma view e um endpoint.
+
+No arquivo `views.py` adicione:
+
+```
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
+from .serializers import  AuthTokenSerializer
+
+class CreateTokenView(ObtainAuthToken):
+    serializer_class = AuthTokenSerializer
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+```
+
+Repare que nós ainda não escrevemos o nosso serializador, AuthTokenSerializer.
+
+Para escrevê-lo, adicione ao arquivo `serializers.py`:
+
+```
+from django.contrib.auth import authenticate
+
+class AuthTokenSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(
+        style={'input_type': 'password'},
+        trim_whitespace=False
+    )
+
+    def validate(self, attrs):
+        self.username = attrs.get('username')
+        self.password = attrs.get('password')
+
+        user = authenticate(
+            request=self.context.get('request'),
+            username=self.username,
+            password=self.password
+        )
+
+        if not user:
+            msg = 'Failure authentication'
+            raise serializers.ValidationError(msg, code='authentication')
+        
+        attrs['user'] = user
+        return attrs
+```
+
+Por fim, precisamos criar o endpoint para criação do Token, então adicione ao arquivo `urls.py` (do app blog):
+
+`path('api/v1/token/', views.CreateTokenView.as_view(), name='token')`
+
+Agora, é só fazer a requisição em `localhost:8080/api/token/` com os parâmetros *username* e *password* no corpo.
